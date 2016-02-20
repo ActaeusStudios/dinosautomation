@@ -33,20 +33,20 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+      <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
+            <li><a href="#">New</a></li>
+            <li><a href="#" id="saveButton">Save</a></li>
+             <li class="dropdown-submenu">
+                <a tabindex="-1" href="#" id="loadButton">Load</a>
+                <ul class="dropdown-menu" id="loadList">
+                  
+                </ul>
+              </li>
           </ul>
         </li>
+        <li><a href="#">Link</a></li>
       </ul>
      
       <ul class="nav navbar-nav navbar-right">
@@ -77,10 +77,10 @@
 <form>
 
 <fieldset data-role="controlgroup" data-type="horizontal" style="float: right; padding-right: 10px">
-	<input type="number" id="timeline_length">
+	<input type="number" id="timeline_length" class="">
 	<a id='changeLength' href="#changelen" class="btn btn-default">Change</a>	
-	<a data-role="button" href="#loadPage" id="loadButton" class="btn btn-default">Load...</a>
-	<a data-role="button" href="#" id="saveButton">Save...</a>
+
+	
 	<input name="radio-choice-h-2" id="pencil" value="on" checked="checked" type="radio">
 	<label for="pencil">Pencil</label>
 	<input name="radio-choice-h-2" id="rubber" value="off" type="radio">
@@ -94,6 +94,7 @@
 
 <fieldset style="float: right; padding-right: 10px; width: 5em; margin-right:20px; margin:10px;">
 <a href="#deployPage" class="btn btn-success" id="deployButton" style="padding:20px;">Dump!</a>
+<a href="#deployPage" class="btn btn-success" id="runButton" style="padding:20px;margin:10px">RUN!</a>
 <button id="magicButton" class="btn btn-error" style="padding:20px; margin-top:10px;">Magic!</button>
 </fieldset>
 
@@ -107,23 +108,13 @@
 	<!--<a href="#main" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cancel</a>-->
 	<h1>Output</h1>
 </div>
-<div id="outputBox" style="font-family: Monaco, Courier">
-hello
-world
+<div id="outputBox" style="font-family: Monaco, Courier" class="well">
+Dump Output
 </div>
 </div>
 
-
-<div data-role="page" id="loadPage" class="container">
-<div data-role="header">
-	<!--<a href="#main" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cancel</a>-->
-	<h1>Load...</h1>
-</div>
-<ul data-role="listview" id="loadList">
-	<li>hi</li>
-</ul>
-</div>
 
 
 </body>
 </html>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>

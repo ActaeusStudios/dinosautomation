@@ -6,8 +6,8 @@ hmi = {};
    List the output name, and the corresponding pin, for each output.
    
  */
-var endpoint = 'http://build.ecliptiq.co.uk:8080';
-var url = 'http://build.ecliptiq.co.uk:8080/caps';
+var endpoint = 'http://20.30.10.126:8080';
+var url = 'http://20.30.10.126:8080/caps';
 // get available data
 var ajaxOptions = {
   url: url,

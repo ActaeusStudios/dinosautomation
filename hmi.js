@@ -59,7 +59,9 @@
 			clickable.on("mousedown", function(event) {
 				if (hmi.mode == "pencil") {
 
-					
+					var string = $(event.target).attr("data-row");
+					var ids = string.split("-");
+					hmi.inputs[ids[1]][ids[2]] = 1;	
 						
 
 					$(event.target).addClass("on");
@@ -191,6 +193,7 @@
 		
 		var rowsToRestore = Math.min(arr.length, hmi.outputs.length);
 		for (var i = 0; i < rowsToRestore; i++) {
+
 			var data = arr[i];
 			var colsToRestore = Math.min(hmi.patternLength, data.length);
 			for (var j = 0; j < colsToRestore; j++) {
@@ -270,7 +273,7 @@
 			"dinoName" : hmi.dinoName,		
 			"trigger" : hmi.sensors[0].name,
 			"length" : hmi.patternLength,
-			"timePerStep" : 1.0,
+			"timePerStep" : 0.25,
 			"timeline" : data	
 			};
 
@@ -296,7 +299,7 @@
 			e.preventDefault();
 		});
 		
-		$("#loadButton").on("click", function() {
+		$("#loadButton").on("mouseover", function() {
 			// populate the loadList
 			$("#loadList").empty();
 			var list = hmi.listSavedTimelines();
@@ -329,6 +332,18 @@
 				var len = $("#timeline_length").val();
 				hmi.changeRowLen(len);
 
+		});
+
+		$('#runButton').on("click", function(){
+			$.ajax({
+			   url: endpoint+'/trigger/'+hmi.dinoName+"/"+hmi.sensors[0].name,
+			   type: 'POST',
+			   datatype: 'application/json',
+			   data: "test",
+			   success: function(response) {
+			     //...
+			   }
+			});
 		});
 	
 
