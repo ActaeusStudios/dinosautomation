@@ -1,7 +1,25 @@
 	hmi.mode = "pencil";
 	hmi.state = {};
+	hmi.patternLength = 60;	
+
+	hmi.inputs = new Array(hmi.patternLength);	
+
+	hmi.changeRowLen = function(len) {
+			hmi.patternLength = parseInt(len);
+			console.log(hmi.out)
+			$('#timeline').html("");
+
+			for (var i = 0; i < hmi.outputs.length; i++) {
+			hmi.addTimelineRow(hmi.outputs[i], hmi.outputs[i], i % 2, i);
+			}	
+
+
+	}
 
 	hmi.addTimelineRow = function (pin, label, oddeven, idx) {
+		if(hmi.inputs[idx] == null){
+		hmi.inputs[idx] = new Array();
+		}	
 		var tlr = $("<tr></tr>").addClass("timelinerow");
 
 		tlr.addClass("row" + idx);
@@ -16,16 +34,34 @@
 	
 		$(tlr).append($("<td>" + label + "</td>").addClass("label"));
 		for (var i = 0; i < hmi.patternLength; i++) {
+
+			if(hmi.inputs[idx][i] != 1){
+			hmi.inputs[idx][i] = 0;
+			}			
+
+
 			var clickable = $("<td></td>").addClass("cell");
 			clickable.addClass("output-" + idx + "-" + i);
+			$(clickable).attr("data-row", "output-" + idx + "-" + i);
 			if (i % 10 == 0) {
 				clickable.addClass("clickableTen");
 			} else {
 				clickable.addClass("clickable");
 			}
+
+			if(hmi.inputs[idx][i] == 1){
+					$(clickable).addClass("on");
+
+			}	
+
+
 			clickable.on("mousemove", hmi.cellMoveHandler);
 			clickable.on("mousedown", function(event) {
 				if (hmi.mode == "pencil") {
+
+					
+						
+
 					$(event.target).addClass("on");
 				} else if (hmi.mode == "rubber") {
 					$(event.target).removeClass("on");
@@ -49,7 +85,14 @@
 		if (hmi.state.mousebutton == 1 && isOnClickedRow) {
 			if (hmi.mode == "pencil") {
 				$(event.target).addClass("on");
+				var string = $(event.target).attr("data-row");
+				var ids = string.split("-");
+				hmi.inputs[ids[1]][ids[2]] = 1;	
+
 			} else if (hmi.mode == "rubber") {
+				var string = $(event.target).attr("data-row");
+					var ids = string.split("-");
+					hmi.inputs[ids[1]][ids[2]] = 0;
 				$(event.target).removeClass("on");
 			}
 		}
@@ -114,6 +157,33 @@
 		return lines;
 	}
 
+	hmi.timelineToApiObj = function() {
+		var lines = [];
+		var arr;
+		var cls;
+
+		outputTimeline = {};
+
+
+		for (var i = 0; i < hmi.outputs.length; i++) {
+			arr = [];
+			// iterate over all of time
+			for (var j = 0; j < hmi.patternLength; j++) {
+				cls = "output-" + i + "-" + j;
+				if ($("." + cls).hasClass("on")) {
+					arr.push(1);
+				} else {
+					arr.push(0);
+				}
+			}
+			outputTimeline[hmi.outputs[i]] = arr;	
+			lines.push(arr);
+		};
+
+		return outputTimeline;
+	}
+
+
 	// load the timeline from some arrays
 	hmi.timelineFromArrays = function(arr) {
 		hmi.clearData();
@@ -171,10 +241,14 @@
 		return items;
 	}
 
-	$(function() {
+	hmi.init = function() {
 		for (var i = 0; i < hmi.outputs.length; i++) {
 			hmi.addTimelineRow(hmi.outputs[i], hmi.outputs[i], i % 2, i);
 		}
+	}
+
+
+		$(function() {
 
 		$("#pencil").on("click", function() {
 			hmi.mode = "pencil";
@@ -185,9 +259,34 @@
 		});
 
 		$("#deployButton").on("click", function() {
-			var data = hmi.timelineToArrays();
-			var json = JSON.stringify(data);
+			var data = hmi.timelineToApiObj();
+
+
+			
+
+
+			Output = {
+			"friendlyName" : hmi.friendlyName,
+			"dinoName" : hmi.dinoName,		
+			"trigger" : hmi.sensors[0].name,
+			"length" : hmi.patternLength,
+			"timePerStep" : 1.0,
+			"timeline" : data	
+			};
+
+			$.ajax({
+			   url: endpoint+'/timelines',
+			   type: 'PUT',
+			   datatype: 'application/json',
+			   data: JSON.stringify(Output),
+			   success: function(response) {
+			     //...
+			   }
+			});
+
+			var json = JSON.stringify(Output);
 			$("#outputBox").text(json);
+			console.log(Output);
 		});
 
 		$("#magicButton").on("click", function(e) {
@@ -223,7 +322,16 @@
 			if (name) {
 				hmi.saveTimelineAs(name);
 			};
-		});
+		});	
 
+
+		$("#changeLength").on("click", function(){
+				var len = $("#timeline_length").val();
+				hmi.changeRowLen(len);
+
+		});
+	
 
 	});
+
+	

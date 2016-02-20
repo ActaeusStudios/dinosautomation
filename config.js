@@ -6,17 +6,19 @@ hmi = {};
    List the output name, and the corresponding pin, for each output.
    
  */
-hmi.pins = {"mouth":12,"head":16,"breathing":18,"tail":22};
-hmi.patternLength = 60;
+var endpoint = 'http://build.ecliptiq.co.uk:8080';
+var url = 'http://build.ecliptiq.co.uk:8080/caps';
+// get available data
+var ajaxOptions = {
+  url: url,
+  dataType: 'json',
+  success: parseData,
+  error: printError
+};
+$.ajax(ajaxOptions);
 
 
-/* Auto generate an index */
-for(var p in hmi.pins){
-	if(hmi.pins.hasOwnProperty(p)){
-		if(hmi.outputs == undefined){
-			hmi.outputs = [p];
-		}else{
-			hmi.outputs.push(p);
-		}
-	}
-}
+
+
+
+//hmi.pins = {"mouth":12,"head":16,"breathing":18,"tail":22};
