@@ -7,6 +7,8 @@
 	hmi.playState = false;
 	hmi.secondCount	= 0;
 
+	hmi.currentsensor = 0;
+
 	hmi.dinos
 
 
@@ -390,6 +392,42 @@
 		});
 
 
+		$('#sensor_select').change(function(){
+				var val = $("#sensor_select").val();
+
+					hmi.currentsensor = parseInt(val);
+		$.ajax({
+			   url: endpoint+'/timelines',
+			   type: 'GET',
+		
+			   success: function(response) {
+			     
+			   	obj = response;	
+			   	thelocation = 0;	
+			   	for(i=0;i<obj.length;i++){
+			   			if(obj[i].trigger == hmi.sensors[hmi.currentsensor].name && obj[i].dinoName == hmi.dinoName){
+			   					thelocation = i;
+			   					break;
+			   			}
+			   	}	
+
+
+			   	console.log(thelocation);
+			   	for(i=0;i<hmi.dinos[id].actuators.length; i++){
+			   			namee = hmi.dinos[id].actuators[i];
+			   			console.log(namee);
+			   			hmi.inputs[i] = obj[thelocation].timeline[namee.name];
+			   	}	
+
+			   	hmi.init();
+			      
+			   }
+		});		
+	
+
+		});	
+
+
 		$('#changedino').on("click", function(){
 				$('#timeline').html("");
 
@@ -406,7 +444,7 @@
 				hmi.sensors = hmi.dinos[id].sensors;
 				hmi.friendlyName = hmi.dinos[id].friendlyName;
 				hmi.dinoName = hmi.dinos[id].name;
-
+				console.log(hmi.dinoName);
 
 				for(i = 0; i < obj.length; i++){
 						hmi.pins[obj[i].name] = obj[i].pin;
@@ -430,23 +468,28 @@
 			   type: 'GET',
 		
 			   success: function(response) {
-			     
+			     hmi.currentsensor = 0;
 			   	obj = response;	
-			   	thelocation = 0;	
-			   	for(i=0;i<obj.length;i++){
-			   			if(obj[i].trigger == hmi.sensors[0].name && obj[i].dinoName == hmi.dinoName){
-			   					thelocation = i;
+			    var thelocationn = 0;	
+			   	for(i=0; i < obj.length; i++){
+			   			if(obj[i].trigger == hmi.sensors[hmi.currentsensor].name && obj[i].dinoName == hmi.dinoName){
+			   					thelocationn = i;
 			   					break;
 			   			}
 			   	}	
-			   	console.log(thelocation);
 
+
+			   	console.log(thelocation);
+			   	$('#sensor_select').html("");	
+			   	for(i=0; i < hmi.dinos[thelocationn].sensors.length; i++){
+			   		$('#sensor_select').append("<option value='"+hmi.dinos[thelocationn].sensors[i].name+"'>"+hmi.dinos[thelocationn].sensors[i].friendlyName+"</option>");
+			   	}	
 
 			   	for(i=0;i<hmi.dinos[id].actuators.length; i++){
 
 			   			namee = hmi.dinos[id].actuators[i];
 			   			console.log(namee);
-			   			hmi.inputs[i] = obj[thelocation].timeline[namee.name];
+			   			hmi.inputs[i] = obj[thelocationn].timeline[namee.name];
 			   	}	
 
 			   	hmi.init();
