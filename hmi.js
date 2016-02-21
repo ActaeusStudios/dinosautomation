@@ -1,8 +1,12 @@
 	hmi.mode = "pencil";
 	hmi.state = {};
 	hmi.patternLength = 60;	
-
+	hmi.rate = 0.25;
 	hmi.inputs = new Array(hmi.patternLength);	
+
+	hmi.playState = false;
+	hmi.secondCount	= 0;
+
 
 	hmi.changeRowLen = function(len) {
 			hmi.patternLength = parseInt(len);
@@ -245,10 +249,38 @@
 	}
 
 	hmi.init = function() {
+
+		$('#timeline_rate').val(hmi.rate);	
+		$('#timeline_length').val(hmi.patternLength);
 		for (var i = 0; i < hmi.outputs.length; i++) {
 			hmi.addTimelineRow(hmi.outputs[i], hmi.outputs[i], i % 2, i);
 		}
 	}
+
+
+	hmi.play_sequence = function(){
+		hmi.playState = true;	
+		hmi.secondCount = 0;
+
+		var start_time = Date.now() / 1000;	
+		console.log(start_time);
+		interv = setInterval(function(){
+				var total_seconds_of_anim = hmi.patternLength * hmi.rate;
+				var now_time = Date.now() / 1000;
+
+				var seconds = now_time -start_time ;
+				var perc = (seconds / total_seconds_of_anim) * 100;	
+				
+
+				$('.timer_ui').css("width", perc+"%");	
+				if(perc >= 100){
+					clearInterval(interv);
+				}	
+
+		},1);	
+
+		
+	}	
 
 
 		$(function() {
@@ -273,7 +305,7 @@
 			"dinoName" : hmi.dinoName,		
 			"trigger" : hmi.sensors[0].name,
 			"length" : hmi.patternLength,
-			"timePerStep" : 0.25,
+			"timePerStep" : hmi.rate,
 			"timeline" : data	
 			};
 
@@ -334,6 +366,12 @@
 
 		});
 
+		$("#changerate").on("click", function(){
+				var len = $("#timeline_rate").val();
+				hmi.rate = len;
+
+		});
+
 		$('#runButton').on("click", function(){
 			$.ajax({
 			   url: endpoint+'/trigger/'+hmi.dinoName+"/"+hmi.sensors[0].name,
@@ -341,9 +379,11 @@
 			   datatype: 'application/json',
 			   data: "test",
 			   success: function(response) {
-			     //...
+			     
 			   }
+
 			});
+			hmi.play_sequence();
 		});
 	
 

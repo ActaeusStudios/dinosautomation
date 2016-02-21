@@ -76,27 +76,47 @@
 
 <form>
 
-<fieldset data-role="controlgroup" data-type="horizontal" style="float: right; padding-right: 10px">
-	<input type="number" id="timeline_length" class="">
-	<a id='changeLength' href="#changelen" class="btn btn-default">Change</a>	
-
 	
-	<input name="radio-choice-h-2" id="pencil" value="on" checked="checked" type="radio">
+	<div class="row" style="">
+	<div class="col-xs-6"></div>
+	<div class="col-xs-3">	
+	<div class="input-group">
+      <input type="number" class="form-control" placeholder="Change Length" id="timeline_length">
+      <span class="input-group-btn">
+        <button id='changeLength' class="btn btn-default" type="button">Go!</button>
+      </span>
+    </div><!-- /input-group -->	
+    </div>
+    <div class="col-xs-3">	
+	<div class="input-group">
+      <input type="number" class="form-control" placeholder="Change Rate" id="timeline_rate">
+      <span class="input-group-btn">
+        <button id='changerate' class="btn btn-default" type="button">Go!</button>
+      </span>
+    </div><!-- /input-group -->	
+    </div>
+    </div>
+
+
+
+<div style="width:100%; background:#f2f2f2;">
+<h2>Timeline</h2>
+</div>
+<div><div class="timer_ui" style="background:red;height:5px;width:0%"></div></div>
+<table width="100%" id="timeline" cellspacing=0>
+</table>
+<input name="radio-choice-h-2" id="pencil" value="on" checked="checked" type="radio">
 	<label for="pencil">Pencil</label>
 	<input name="radio-choice-h-2" id="rubber" value="off" type="radio">
 	<label for="rubber">Rubber</label>
-</fieldset>
 
-<h2>Timeline</h2>
+<div>
 
-<table width="100%" id="timeline" cellspacing=0>
-</table>
+<a href="#deployPage" class="btn btn-warning" id="deployButton" style="padding:20px;float:left;margin:10px;">Upload!</a>
+<a href="#deployPage" class="btn btn-success" id="runButton" style="padding:20px;margin:10px;float:left">RUN!</a>
+<button id="magicButton" class="btn btn-error" style="padding:20px; margin-top:10px;float:left">Magic!</button>
 
-<fieldset style="float: right; padding-right: 10px; width: 5em; margin-right:20px; margin:10px;">
-<a href="#deployPage" class="btn btn-success" id="deployButton" style="padding:20px;">Dump!</a>
-<a href="#deployPage" class="btn btn-success" id="runButton" style="padding:20px;margin:10px">RUN!</a>
-<button id="magicButton" class="btn btn-error" style="padding:20px; margin-top:10px;">Magic!</button>
-</fieldset>
+</div>
 
 </form>
 </div>
