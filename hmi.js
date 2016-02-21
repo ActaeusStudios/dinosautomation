@@ -7,6 +7,8 @@
 	hmi.playState = false;
 	hmi.secondCount	= 0;
 
+	hmi.dinos
+
 
 	hmi.changeRowLen = function(len) {
 			hmi.patternLength = parseInt(len);
@@ -252,6 +254,7 @@
 
 		$('#timeline_rate').val(hmi.rate);	
 		$('#timeline_length').val(hmi.patternLength);
+		$('#dino-name').html(" - " + hmi.friendlyName);
 		for (var i = 0; i < hmi.outputs.length; i++) {
 			hmi.addTimelineRow(hmi.outputs[i], hmi.outputs[i], i % 2, i);
 		}
@@ -368,7 +371,7 @@
 
 		$("#changerate").on("click", function(){
 				var len = $("#timeline_rate").val();
-				hmi.rate = len;
+				hmi.rate = parseFloat(len);
 
 		});
 
@@ -384,6 +387,76 @@
 
 			});
 			hmi.play_sequence();
+		});
+
+
+		$('#changedino').on("click", function(){
+				$('#timeline').html("");
+
+
+				id = $('#dino_select').val();
+				console.log(id);
+
+				var obj = hmi.dinos[id].actuators;	
+
+				hmi.pins = {};
+				hmi.outputs = null;
+				hmi.inputs = new Array()
+
+				hmi.sensors = hmi.dinos[id].sensors;
+				hmi.friendlyName = hmi.dinos[id].friendlyName;
+				hmi.dinoName = hmi.dinos[id].name;
+
+
+				for(i = 0; i < obj.length; i++){
+						hmi.pins[obj[i].name] = obj[i].pin;
+				}
+				/* Auto generate an index */
+				for(var p in hmi.pins){
+					if(hmi.pins.hasOwnProperty(p)){
+						if(hmi.outputs == undefined){
+							hmi.outputs = [p];
+						}else{
+							hmi.outputs.push(p);
+						}
+					}
+				}
+				console.log(hmi.outputs);
+
+
+
+		$.ajax({
+			   url: endpoint+'/timelines',
+			   type: 'GET',
+		
+			   success: function(response) {
+			     
+			   	obj = response;	
+			   	thelocation = 0;	
+			   	for(i=0;i<obj.length;i++){
+			   			if(obj[i].trigger == hmi.sensors[0].name && obj[i].dinoName == hmi.dinoName){
+			   					thelocation = i;
+			   					break;
+			   			}
+			   	}	
+			   	console.log(thelocation);
+
+
+			   	for(i=0;i<hmi.dinos[id].actuators.length; i++){
+
+			   			namee = hmi.dinos[id].actuators[i];
+			   			console.log(namee);
+			   			hmi.inputs[i] = obj[thelocation].timeline[namee.name];
+			   	}	
+
+			   	hmi.init();
+			      
+			   }
+		});		
+
+
+
+
 		});
 	
 

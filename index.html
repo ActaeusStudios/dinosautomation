@@ -78,7 +78,16 @@
 
 	
 	<div class="row" style="">
-	<div class="col-xs-6"></div>
+	<div class="col-xs-6">
+		<div class="input-group">
+	      <select class="form-control" placeholder="Change Length" id="dino_select">
+
+	      </select>
+	      <span class="input-group-btn">
+	        <button id='changedino' class="btn btn-default" type="button">Go!</button>
+	      </span>
+	    </div><!-- /input-group -->	
+    </div>
 	<div class="col-xs-3">	
 	<div class="input-group">
       <input type="number" class="form-control" placeholder="Change Length" id="timeline_length">
@@ -100,7 +109,7 @@
 
 
 <div style="width:100%; background:#f2f2f2;">
-<h2>Timeline</h2>
+<h2>Timeline<span id="dino-name"></span></h2>
 </div>
 <div><div class="timer_ui" style="background:red;height:5px;width:0%"></div></div>
 <table width="100%" id="timeline" cellspacing=0>
